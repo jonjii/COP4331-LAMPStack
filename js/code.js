@@ -5,7 +5,7 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
-function doLogin() {
+function handleLogin() {
     userId = 0;
     firstName = "";
     lastName = "";
@@ -50,6 +50,8 @@ function doLogin() {
         document.getElementById("loginResult").innerHTML = err.message;
     }
 }
+
+function handleRegister() {}
 
 function saveCookie() {
     let minutes = 20;
