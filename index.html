@@ -13,24 +13,29 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
       />
+    <link href='https://fonts.googleapis.com/css?family=Open Sans'
+      rel='stylesheet'>
   </head>
 
   <body id="body">
-    <h1 class="title">COP 4331 LAMP Stack Demo</h1>
+    <h1 class="title text-p">COP 4331 LAMP Stack Demo</h1>
 
     <div class="container">
+      <h3 class="text-s">Login to your account</h3>
 
-      <h3>Login to your account</h3>
       <div class="input">
         <i class="icon fas fa-user"></i>
-        <input id="loginName" type="text" placeholder="username" />
+        <input id="loginName" type="text"
+          placeholder="username"
+          />
       </div>
       <div class="input">
         <i class="icon fas fa-key"></i>
-        <input id="loginPassword" type="password" placeholder="password" />
+        <input id="loginPassword" type="password"
+          placeholder="password" />
       </div>
 
-      <button type="button" class="button" onclick="doLogin();">Log in</button>
+      <button type="button" class="button" onclick="handleLogin();">Log in</button>
       <span id="loginResult"></span>
 
       <a href="register.html">New? Register</a>

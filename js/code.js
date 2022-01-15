@@ -51,6 +51,9 @@ function handleLogin() {
     }
 }
 
+function handleAddContact() {
+    document.getElementById("info").classList.toggle("info-selected");
+}
 function handleRegister() {}
 
 function saveCookie() {
