@@ -1,6 +1,3 @@
-const urlBase = "http://COP4331-5.com/LAMPAPI";
-const extension = "php";
-
 let userId = 0;
 let firstName = "";
 let lastName = "";

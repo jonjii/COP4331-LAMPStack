@@ -195,4 +195,8 @@ body {
   border-radius: var(--input-br);
 }
 
+#login-result {
+  color: red;
+}
+
 /*# sourceMappingURL=styles.css.map */
