@@ -1,8 +1,9 @@
 const urlBase = "http://COP4331-5.com/api/";
 
+// Logs a user into the database, redirects to contacts page
 function handleLogin() {
-    const username = document.querySelector("loginName").value;
-    const password = document.querySelector("loginPassword").value;
+    const username = document.querySelector("#login-name").value;
+    const password = document.querySelector("#login-password").value;
 
     const err = logIn(username, password);
     if (err != null) {
@@ -15,10 +16,6 @@ function handleLogin() {
     window.location.href = "contacts.html";
 }
 
-function handleAddContact() {
-    document.getElementById("info").classList.toggle("info-selected");
-}
-
 // Registers a user into the database, then logs them in
 function handleRegister() {
     const firstName = document.querySelector("#register-first-name").value;
@@ -29,6 +26,12 @@ function handleRegister() {
         "#register-confirm-password"
     ).value;
 
+    // Check all data is filled
+    if (firstName.length == 0 || lastName.length == 0 || username.length == 0) {
+        document.querySelector("#register-result").innerHTML =
+            "Please enter all information.";
+        return;
+    }
     // Check matching password
     if (password != confirmPassword) {
         document.querySelector("#register-result").innerHTML =
@@ -41,14 +44,24 @@ function handleRegister() {
             "Invalid password. Password must be at least 8 characters long.";
         return;
     }
+
     document.querySelector("#register-result").innerHTML = "";
 
     // Register user
     const err = registerUser(firstName, lastName, username, password);
     if (err != null) {
         console.log(err);
+        document.querySelector("#register-result").innerHTML =
+            "Error: " + err.message;
         return;
     }
 
     window.location.href = "contacts.html";
+}
+
+// Adds a contact, then prepares it for editing
+function handleCreateContact() {
+    // Open contact tab
+    document.getElementById("info").classList.toggle("info-selected");
+    const cid = createContact(getID, "", "", "", "");
 }

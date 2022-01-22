@@ -1,23 +1,30 @@
-const baseURL = "http://";
-const extension = "php";
+const baseURL = "http://friendidex.xyz/api/";
+const ext = "php";
 
 class User {
-    constructor(id) {
-        this.id = id;
-        this.name = "";
-        this.password = "";
-        this.uid = 0;
-        this.dateCreated = null;
-        this.dateLastUpdated = null;
+    constructor(
+        uid,
+        firstName,
+        lastName,
+        password,
+        dateCreated,
+        dateLastUpdated
+    ) {
+        this.uid = uid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.dateCreated = dateCreated;
+        this.dateLastUpdated = dateLastUpdated;
     }
 }
 
 // method: string, url: string, params: Object
 // Returns json response, or error
-function doRequest(method, url, params) {
+function doRequest(request, params) {
     // Make Request
     let xhr = new XMLHttpRequest();
-    xhr.open(method, url);
+    xhr.open("POST", baseURL + request + ext);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
     try {
@@ -32,42 +39,9 @@ function doRequest(method, url, params) {
         };
         xhr.send(JSON.stringify(params));
     } catch (e) {
+        console.log(e);
         return e;
     }
-}
-
-// username: string, password: string
-// returns: error
-function logIn(username, password) {
-    const params = {
-        username: username,
-        password: md5(password),
-    };
-    const resp = doRequest("GET", baseURL + "users", params);
-    if (!resp) {
-        return new Error(resp);
-    }
-
-    setCookie(resp.id);
-    return null;
-}
-
-// name: string, username: stringe, password: string
-// returns: error
-function registerUser(firstName, lastName, username, password) {
-    const params = {
-        firstName: firstName,
-        lastName: lastName,
-        username: username,
-        password: md5(password),
-    };
-    const resp = doRequest("POST", baseURL + "users", params);
-    if (!resp) {
-        return new Error(resp);
-    }
-
-    setCookie(resp.id);
-    return null;
 }
 
 // id: number
@@ -89,4 +63,159 @@ function getID() {
 function logout() {
     document.cookie = `id=0;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     window.location.href = "index.html";
+}
+
+//! --------------------- API ENDPOINTS ---------------------
+
+// returns: error
+function logIn(username, password) {
+    const params = {
+        username: username,
+        password: md5(password),
+    };
+    const resp = doRequest("Login", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    setCookie(resp.id);
+    return null;
+}
+
+// returns: error
+function registerUser(firstName, lastName, username, password) {
+    const params = {
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        password: md5(password),
+    };
+    const resp = doRequest("RegisterUser", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    setCookie(resp.id);
+    return null;
+}
+
+// returns: error
+function deleteUser(uid, password) {
+    const params = {
+        password: password,
+        uid: uid,
+    };
+
+    const resp = doRequest("DeleteUser", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    setCookie(0);
+    return null;
+}
+
+// returns: User Object
+function getUser(uid) {
+    const params = {
+        uid: uid,
+    };
+
+    const resp = doRequest("GetUser", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return new User(
+        resp.uid,
+        resp.firstName,
+        resp.lastName,
+        resp.password,
+        resp.dateCreated,
+        resp.dateLastUpdated
+    );
+}
+
+// Returns: contact id (cid)
+function createContact(uid, firstName, lastName, email, phone) {
+    const params = {
+        uid: uid,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        color: "#" + ((Math.random() * 0xffffff) << 0).toString(16),
+    };
+
+    const resp = doRequest("CreateContact", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return resp.cid;
+}
+
+// Returns: error
+function updateContact(uid, cid, firstName, lastName, email, phone, color) {
+    const params = {
+        uid: uid,
+        cid: cid,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        color: color,
+    };
+
+    const resp = doRequest("UpdateContact", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return null;
+}
+
+// Returns: error
+function deleteContact(uid, cid) {
+    const params = {
+        uid: uid,
+        cid: cid,
+    };
+
+    const resp = doRequest("DeleteContact", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return null;
+}
+
+// Returns: ContactStub[]
+function searchContacts(uid, query) {
+    const params = {
+        uid: uid,
+        query: query,
+    };
+
+    const resp = doRequest("UpdateContact", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return null;
+}
+
+// Returns: Contact
+function getContact(uid, cid) {
+    const params = {
+        uid: uid,
+        cid: cid,
+    };
+
+    const resp = doRequest("GetContact", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    return null;
 }

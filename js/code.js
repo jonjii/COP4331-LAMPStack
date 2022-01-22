@@ -48,7 +48,7 @@ function handleLogin() {
     }
 }
 
-function handleAddContact() {
+function handleCreateContact() {
     document.getElementById("info").classList.toggle("info-selected");
 }
 function handleRegister() {}
