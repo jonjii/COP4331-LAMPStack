@@ -195,6 +195,7 @@ body {
   border-radius: var(--input-br);
 }
 
+#register-result,
 #login-result {
   color: red;
 }

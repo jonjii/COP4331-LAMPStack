@@ -37,18 +37,36 @@ function doRequest(method, url, params) {
 }
 
 // username: string, password: string
+// returns: error
 function logIn(username, password) {
-    let params = {
+    const params = {
         username: username,
         password: md5(password),
     };
-    let resp = doRequest("GET", baseURL + "users", params);
+    const resp = doRequest("GET", baseURL + "users", params);
     if (!resp) {
         return new Error(resp);
     }
 
     setCookie(resp.id);
-    return resp.id;
+    return null;
+}
+
+// name: string, username: stringe, password: string
+// returns: error
+function registerUser(name, username, password) {
+    const params = {
+        name: name,
+        username: username,
+        password: md5(password),
+    };
+    const resp = doRequest("POST", baseURL + "users", params);
+    if (!resp) {
+        return new Error(resp);
+    }
+
+    setCookie(resp.id);
+    return null;
 }
 
 // id: number
@@ -60,11 +78,11 @@ function setCookie(id) {
 
 function getID() {
     const id = document.cookie.split(";").split("=")[1];
-    if (!cookie || !cookie.id) {
+    if (!cookie || !id) {
         return new Error("getID error: invalid cookie");
     }
 
-    return cookie.id;
+    return id;
 }
 
 function logout() {

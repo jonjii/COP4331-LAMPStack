@@ -24,31 +24,35 @@
     <div class="container">
       <h3 class="text-s">Register</h3>
       <div class="input">
+        <i class="icon fas"></i>
+        <input type="text" id="register-name" placeholder="your name" />
+      </div>
+      <div class="input">
         <i class="icon fas fa-user"></i>
-        <input type="text" id="registerName" placeholder="username" />
+        <input type="text" id="register-username" placeholder="username" />
       </div>
       <div class="input">
         <i class="icon fas fa-key"></i>
         <input
           type="password"
-          id="registerPassword"
+          id="register-password"
           placeholder="password"
           />
       </div>
       <div class="input">
-        <i class="icon"></i>
+        <i class="icon fas fa-key"></i>
         <input
           type="password"
-          id="registerConfirmPassword"
+          id="register-confirm-password"
           placeholder="confirm password"
           />
       </div>
 
-      <span id="registerResult"></span>
+      <span id="register-result"></span>
 
       <button
         type="button"
-        id="registerButton"
+        id="register-button"
         class="button"
         onclick="handleRegister();">
         Register
