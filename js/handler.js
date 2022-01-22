@@ -21,7 +21,8 @@ function handleAddContact() {
 
 // Registers a user into the database, then logs them in
 function handleRegister() {
-    const name = document.querySelector("#register-name").value;
+    const firstName = document.querySelector("#register-first-name").value;
+    const lastName = document.querySelector("#register-last-name").value;
     const username = document.querySelector("#register-username").value;
     const password = document.querySelector("#register-password").value;
     const confirmPassword = document.querySelector(
@@ -43,7 +44,7 @@ function handleRegister() {
     document.querySelector("#register-result").innerHTML = "";
 
     // Register user
-    const err = registerUser(name, username, password);
+    const err = registerUser(firstName, lastName, username, password);
     if (err != null) {
         console.log(err);
         return;

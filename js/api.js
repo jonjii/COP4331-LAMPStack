@@ -54,9 +54,10 @@ function logIn(username, password) {
 
 // name: string, username: stringe, password: string
 // returns: error
-function registerUser(name, username, password) {
+function registerUser(firstName, lastName, username, password) {
     const params = {
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         username: username,
         password: md5(password),
     };
