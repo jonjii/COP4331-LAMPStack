@@ -1,15 +1,13 @@
 
 <?php
 	
-	header("Content-type:application/json");
-
 	$inData = getRequestInfo();
 	
 	$id = 0;
 	$firstName = "";
 	$lastName = "";
 
-	$conn = new mysqli("localhost", "root", "group28POOS", "COP4331");	
+	$conn = new mysqli("localhost", "YayApi", "ILovePHP", "COP4331");	
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );

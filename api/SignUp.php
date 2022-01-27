@@ -1,80 +1,79 @@
 
 <?php
 
-	$inData = getRequestInfo();
+$inData = getRequestInfo();
+
+$uid = 0;
+
+$conn = new mysqli("localhost", "YayApi", "ILovePHP", "COP4331");	
+
+if( $conn->connect_error )
+{
+	returnWithInfo($uid, $conn->connect_error );
+}
+else
+{
+	// Login to see if the user exists
+	$stmt1 = $conn->prepare("SELECT ID FROM Users WHERE Login=? AND Password =?");
+	$stmt1->bind_param("ss", $inData["login"], $inData["password"]);
+	$stmt1->execute();
+	$result = $stmt1->get_result();
 	
-	$uid = 0;
+	$stmt1->close();
 
-	$conn = new mysqli("localhost", "YayApi", "ILovePHP", "COP4331");	
-
-	if( $conn->connect_error )
+	// Checks if we have an associative array, meaning a user exists
+	if( $row = $result->fetch_assoc()  )
 	{
-		returnWithInfo($uid, $conn->connect_error );
+		returnWithError($uid, "User already exists!");
 	}
 	else
 	{
-		// Check if user exists
-		$stmt1 = $conn->prepare("SELECT ID, FROM Users WHERE Login=? AND Password =?");
-		$stmt1->bind_param("ss", $inData["login"], $inData["password"]);
-		$stmt1->execute();
-		$result = $stmt1->get_result();
-		
-		$stmt1->close();
+		// Actually does the inserting for the user!
+		$prev_uid = $conn->insert_id;
+		$stmt2 = $conn->prepare("INSERT INTO `Users` (`FirstName`, `LastName`, `Login`, `Password`)
+								VALUES (?, ?, ?, ?)");
+		$stmt2->bind_param("ssss", $inData["firstName"], $inData["lastName"], $inData["login"], $inData["password"]);
+		$stmt2->execute();
+		$stmt2->close();
 
-		if( $row = $result->fetch_assoc()  )
+		// returns the last inserted id
+		$uid = $conn->insert_id;
+		 
+		// If we have a different id after inserting, we successfully inserted!
+		if( $prev_uid != $uid )
 		{
-			returnWithInfo($uid, "User already exists!");
-	
+			returnWithInfo($uid, "User added successfully");
 		}
+		// cringe
 		else
 		{
-			// Create new user
-			$stmt2 = $conn->prepare("INSERT INTO `Users` (`FirstName`, `LastName`, `Login`, `Password`)
-								VALUES (?, ?, ?, ?)");
-			$stmt2->bind_param("ssss", $inData["firstName"], $inData["lastName"], $inData["login"], $inData["password"]);
-			$stmt2->execute();
-
-			
-			$stmt2->close();
-
-			// Return New User's ID
-			$stmt3 = $conn->prepare("SELECT ID, FROM Users WHERE Login=? AND Password =?");
-			$stmt3->bind_param("ss", $inData["login"], $inData["password"]);
-			$stmt3->execute();
-
-			$newID = $stmt3->get_result();
-
-			
-			$stmt3->close();
-
-			if( $row2 = $newID->fetch_assoc()  )
-			{
-				returnWithInfo($uid, "User added successfully");
-			}
-			else
-			{
-				returnWithInfo($uid, "Error while adding user");
-			}	
-		}
-
-		$conn->close();
-	}
-	
-	function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
+			returnWithError(0, "Error while adding user");
+		}	
 	}
 
-	function sendResultInfoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		echo $obj;
-	}
-	
-	function returnWithInfo( $uid, $msg )
-	{
-		$retValue = '{"id":' . $uid . ',"message":"' . $msg . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
+	$conn->close();
+}
+
+function getRequestInfo()
+{
+	return json_decode(file_get_contents('php://input'), true);
+}
+
+function sendResultInfoAsJson( $obj )
+{
+	header('Content-type: application/json');
+	echo $obj;
+}
+
+function returnWithInfo( $uid, $msg )
+{
+	$retValue = '{"id":' . $uid . ',"message":"' . $msg . '"}';
+	sendResultInfoAsJson( $retValue );
+}
+
+function returnWithError( $uid, $err)
+{
+	$retValue = '{"id":' . $uid . ',"error":"' . $err . '"}';
+	sendResultInfoAsJson( $retValue );
+}
 ?>
