@@ -61,7 +61,11 @@ function handleRegister() {
 
 // Adds a contact, then prepares it for editing
 function handleCreateContact() {
+    if (document.getElementById("info").classList.contains("info-selected")) {
+        return;
+    }
+
     // Open contact tab
-    document.getElementById("info").classList.toggle("info-selected");
+    document.getElementById("info").classList.add("info-selected");
     const cid = createContact(getID, "", "", "", "");
 }

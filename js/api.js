@@ -1,5 +1,5 @@
-const baseURL = "http://friendidex.xyz/api/";
-const ext = "php";
+const baseURL = "http://friendidex.xyz/LAMPAPI/";
+const ext = ".php";
 
 class User {
     constructor(
@@ -91,7 +91,7 @@ function registerUser(firstName, lastName, username, password) {
         password: md5(password),
     };
     const resp = doRequest("RegisterUser", params);
-    if (!resp) {
+    if (resp instanceof Error) {
         return new Error(resp);
     }
 

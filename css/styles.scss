@@ -85,6 +85,9 @@ body {
         }
     }
 }
+.input-large {
+    font-size: 1.5em;
+}
 
 .input {
     position: relative;
@@ -92,7 +95,6 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
-    font-size: 1.5em;
 
     .icon {
         display: flex;
@@ -111,7 +113,6 @@ body {
     input {
         flex: 1;
         padding: 0 0.5em;
-        height: 1.5em;
 
         border: none;
         border-radius: 0 $input-br $input-br 0;
@@ -124,7 +125,7 @@ body {
         &:focus {
             outline: none;
         }
-        &.sharp {
+        &.sharp { 
             border-radius: 0;
         }
         &.round {
