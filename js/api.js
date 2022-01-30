@@ -29,13 +29,11 @@ function doRequest(request, params) {
 
     try {
         xhr.onreadystatechange = function () {
+            console.log(xhr.responseText);
             if (xhr.responseText == "") return null;
 
             const resp = JSON.parse(xhr.responseText);
-            if (this.readyState == 4 && this.status == 200) {
-                return resp;
-            }
-            throw new Error(`${this.status}: ${resp.error}`);
+            return resp;
         };
         xhr.send(JSON.stringify(params));
     } catch (e) {
@@ -87,11 +85,11 @@ function registerUser(firstName, lastName, username, password) {
     const params = {
         firstName: firstName,
         lastName: lastName,
-        username: username,
+        login: username,
         password: md5(password),
     };
-    const resp = doRequest("RegisterUser", params);
-    if (resp instanceof Error) {
+    let resp = doRequest("SignUp", params);
+    if (resp instanceof Error || !resp) {
         return new Error(resp);
     }
 
@@ -127,7 +125,7 @@ function getUser(uid) {
     }
 
     return new User(
-        resp.uid,
+        uid,
         resp.firstName,
         resp.lastName,
         resp.password,
