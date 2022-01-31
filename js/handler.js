@@ -5,14 +5,22 @@ function handleLogin() {
     const username = document.querySelector("#login-name").value;
     const password = document.querySelector("#login-password").value;
 
-    const err = logIn(username, password);
-    if (err != null) {
+    const params = {
+        username: username,
+        password: md5(password),
+    };
+    doRequest(logIn, "Login", params);
+}
+
+function logIn(resp) {
+    if (!resp || resp.error != null) {
         document.querySelector("#login-result").innerHTML =
             "Invalid username or password";
-        console.log(err);
+        console.log(resp.error);
         return;
     }
 
+    setCookie(resp.id);
     window.location.href = "contacts.html";
 }
 
@@ -48,14 +56,25 @@ function handleRegister() {
     document.querySelector("#register-result").innerHTML = "";
 
     // Register user
-    const err = registerUser(firstName, lastName, username, password);
-    if (err != null) {
-        console.log(err);
+    const params = {
+        firstName: firstName,
+        lastName: lastName,
+        login: username,
+        password: md5(password),
+    };
+    doRequest(registerUser, "SignUp", params);
+}
+
+function registerUser(resp) {
+    if (!resp || resp.error) {
+        console.log(resp.error);
         document.querySelector("#register-result").innerHTML =
-            "Error: " + err.message;
+            "Error: " + resp.error;
+        window.location.href = "index.html";
         return;
     }
 
+    setCookie(resp.id);
     window.location.href = "contacts.html";
 }
 

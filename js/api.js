@@ -19,25 +19,25 @@ class User {
     }
 }
 
-// method: string, url: string, params: Object
+// handler: function to call once response made
+// request: string
+// params: Object
 // Returns json response, or error
-function doRequest(request, params) {
-    // Make Request
+function doRequest(handle, request, params) {
+    // make request
     let xhr = new XMLHttpRequest();
     xhr.open("POST", baseURL + request + ext);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
     try {
         xhr.onreadystatechange = function () {
-            console.log(xhr.responseText);
             if (xhr.responseText == "") return null;
-
-            const resp = JSON.parse(xhr.responseText);
-            return resp;
+            // call handler function
+            handle(JSON.parse(xhr.responseText));
         };
         xhr.send(JSON.stringify(params));
     } catch (e) {
-        console.log(e);
+        console.log("error:" + e);
         return e;
     }
 }
@@ -50,7 +50,10 @@ function setCookie(id) {
 }
 
 function getID() {
-    const id = document.cookie.split(";").split("=")[1];
+    if (document.cookie.length == 0) {
+        return new Error("getID error: cookie doesn't exist");
+    }
+    const id = document.cookie.split(";")[0].split("=")[1];
     if (!cookie || !id) {
         return new Error("getID error: invalid cookie");
     }
@@ -64,38 +67,6 @@ function logout() {
 }
 
 //! --------------------- API ENDPOINTS ---------------------
-
-// returns: error
-function logIn(username, password) {
-    const params = {
-        username: username,
-        password: md5(password),
-    };
-    const resp = doRequest("Login", params);
-    if (!resp) {
-        return new Error(resp);
-    }
-
-    setCookie(resp.id);
-    return null;
-}
-
-// returns: error
-function registerUser(firstName, lastName, username, password) {
-    const params = {
-        firstName: firstName,
-        lastName: lastName,
-        login: username,
-        password: md5(password),
-    };
-    let resp = doRequest("SignUp", params);
-    if (resp instanceof Error || !resp) {
-        return new Error(resp);
-    }
-
-    setCookie(resp.id);
-    return null;
-}
 
 // returns: error
 function deleteUser(uid, password) {
